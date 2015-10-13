@@ -12,6 +12,7 @@ as
 		, wallet_password			varchar2 default null
 		, airbrake_project_id		varchar2 default null
 		, airbrake_project_key		varchar2 default null
+		, airbrake_user_key			varchar2 default null
 	)
 
 	as
@@ -55,6 +56,10 @@ as
 			airbrake_session.airbrake_project_key := airbrake_project_key;
 		end if;
 
+		if airbrake_user_key is not null then
+			airbrake_session.airbrake_user_key := airbrake_user_key;
+		end if;
+
 	end session_setup;
 
 	procedure parse_airbrake_result
@@ -88,8 +93,6 @@ as
 		pragma exception_init(session_setup_error, -20001);
 
 	begin
-
-		dbms_output.put_line(airbrake_session.transport_protocol || '://' || airbrake_session.airbrake_host || ':' || airbrake_session.airbrake_host_port || '/' || airbrake_session.airbrake_api_name || '/' || airbrake_session.airbrake_api_version || '/' || airbrake_call_request.call_endpoint);
 
 		-- Always reset result
 		airbrake.airbrake_api_raw_result := null;
@@ -191,8 +194,6 @@ as
 				when others then
 					raise;
 		end;
-
-		dbms_output.put_line(airbrake_api_raw_result);
 
 		utl_http.end_response(
 			r => airbrake_response

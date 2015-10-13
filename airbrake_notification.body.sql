@@ -152,6 +152,10 @@ as
 	
 		dbms_application_info.set_action('automatic_stack');
 
+		airbrake.session_setup(
+			airbrake_api_version => 'v3'
+		);
+
 		airbrake.init_talk('projects/'|| airbrake.airbrake_session.airbrake_project_id ||'/notices?key='|| airbrake.airbrake_session.airbrake_project_key, 'POST');
 
 		-- First we build the notifier block
@@ -192,6 +196,10 @@ as
 		temp_list					json_list := json_list();
 
 	begin
+
+		airbrake.session_setup(
+			airbrake_api_version => 'v3'
+		);
 
 		airbrake.init_talk('projects/'|| airbrake.airbrake_session.airbrake_project_id ||'/notices?key='|| airbrake.airbrake_session.airbrake_project_key, 'POST');
 

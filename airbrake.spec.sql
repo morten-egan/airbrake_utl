@@ -20,6 +20,7 @@ as
 		, wallet_password			varchar2(4000)
 		, airbrake_project_id 		varchar2(4000)
 		, airbrake_project_key		varchar2(4000)
+		, airbrake_user_key			varchar2(4000)
 	);
 	airbrake_session				session_settings;
 
@@ -54,6 +55,7 @@ as
 		, wallet_password			varchar2 default null
 		, airbrake_project_id		varchar2 default null
 		, airbrake_project_key		varchar2 default null
+		, airbrake_user_key			varchar2 default null
 	);
 
 	/** Send request to Airbrake API

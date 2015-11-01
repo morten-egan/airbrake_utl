@@ -13,11 +13,7 @@ as
 	
 	as
 
-
-	
 	begin
-	
-		dbms_application_info.set_action('create_deploy');
 
 		airbrake.session_setup(
 			airbrake_api_version => 'v4'
@@ -41,11 +37,8 @@ as
 
 		airbrake.talk;
 	
-		dbms_application_info.set_action(null);
-	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end create_deploy;
@@ -59,8 +52,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('list_deploys');
-
 		airbrake.session_setup(
 			airbrake_api_version => 'v4'
 		);
@@ -73,13 +64,10 @@ as
 
 		airbrake.talk;
 	
-		dbms_application_info.set_action(null);
-	
 		return airbrake.airbrake_response_result;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end list_deploys;
@@ -94,8 +82,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('show_deploy');
-
 		airbrake.session_setup(
 			airbrake_api_version => 'v4'
 		);
@@ -107,22 +93,14 @@ as
 		end if;
 
 		airbrake.talk;
-	
-		dbms_application_info.set_action(null);
-	
+		
 		return airbrake.airbrake_response_result;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end show_deploy;
-
-begin
-
-	dbms_application_info.set_client_info('airbrake_deploys');
-	dbms_session.set_identifier('airbrake_deploys');
 
 end airbrake_deploys;
 /

@@ -19,8 +19,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('error_block');
-
 		$if dbms_db_version.ver_le_11 $then
 			-- This is where we do pre 12c stuff
 			l_sqlcode := SQLCODE;
@@ -50,14 +48,11 @@ as
 				l_ret_val.append(l_error.to_json_value);
 			end loop;
 		$end
-	
-		dbms_application_info.set_action(null);
-	
+		
 		return l_ret_val;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end error_block;
@@ -87,12 +82,13 @@ as
 		l_ret_val			json := json();
 		l_version			varchar2(250);
 		l_compatibility		varchar2(250);
-	
+		l_module			varchar2(250);
+		l_action			varchar2(250);
+
 	begin
 	
-		dbms_application_info.set_action('context_block');
-
 		dbms_utility.db_version( l_version, l_compatibility );
+		dbms_application_info.read_module(l_module, l_action);
 
 		l_ret_val.put('os', dbms_utility.port_string);
 		l_ret_val.put('language', 'PL/SQL ' || l_version);
@@ -101,14 +97,16 @@ as
 		else
 			l_ret_val.put('environment', sys_context('USERENV', 'DB_NAME'));
 		end if;
-	
-		dbms_application_info.set_action(null);
-	
+		l_ret_val.put('version', l_version);
+		l_ret_val.put('component', l_module);
+		l_ret_val.put('action', l_action);
+		l_ret_val.put('userName', sys_context('USERENV', 'CURRENT_SCHEMA'));
+		l_ret_val.put('userId', sys_context('USERENV', 'CURRENT_USER'));
+		
 		return l_ret_val;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end context_block;
@@ -122,8 +120,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('environment_block');
-
 		l_ret_val.put('Current schema', sys_context('USERENV', 'CURRENT_SCHEMA'));
 		l_ret_val.put('Current user', sys_context('USERENV', 'CURRENT_USER'));
 		if dbms_utility.is_cluster_database then
@@ -132,14 +128,11 @@ as
 			l_ret_val.put('RAC', 'No');
 		end if;
 		l_ret_val.put('Database name', sys_context('USERENV', 'DB_NAME'));
-	
-		dbms_application_info.set_action(null);
-	
+		
 		return l_ret_val;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end environment_block;
@@ -150,8 +143,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('automatic_stack');
-
 		airbrake.session_setup(
 			airbrake_api_version => 'v3'
 		);
@@ -172,12 +163,9 @@ as
 
 		-- Finally we ship the json away
 		airbrake.talk;
-	
-		dbms_application_info.set_action(null);
-	
+		
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end automatic_stack;

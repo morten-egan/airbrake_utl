@@ -14,8 +14,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('list_projects');
-
 		l_api_result := airbrake_project.list_projects;
 
 		if l_api_result.result.exist('projects') then
@@ -47,13 +45,10 @@ as
 			pipe row(l_ret_val);
 		end if;
 	
-		dbms_application_info.set_action(null);
-	
 		return;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end list_projects;
@@ -71,8 +66,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('show_project');
-
 		l_api_result := airbrake_project.show_project(project_id);
 
 		if l_api_result.result.exist('project') then
@@ -100,14 +93,11 @@ as
 			l_ret_val.groupunresolvedcount := null;
 			pipe row(l_ret_val);
 		end if;
-	
-		dbms_application_info.set_action(null);
-	
+		
 		return;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end show_project;
@@ -126,8 +116,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('list_deploys');
-
 		if project_id is not null then
 			l_api_result := airbrake_deploys.list_deploys(project_id);
 		else
@@ -174,14 +162,11 @@ as
 			l_ret_val.updatedat := null;
 			pipe row(l_ret_val);
 		end if;
-	
-		dbms_application_info.set_action(null);
-	
+		
 		return;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end list_deploys;
@@ -200,8 +185,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('show_deploy');
-
 		if project_id is not null then
 			l_api_result := airbrake_deploys.show_deploy(deploy_id, project_id);
 		else
@@ -245,22 +228,14 @@ as
 			l_ret_val.updatedat := null;
 			pipe row(l_ret_val);
 		end if;
-	
-		dbms_application_info.set_action(null);
-	
+		
 		return;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end show_deploy;
-
-begin
-
-	dbms_application_info.set_client_info('airbrake_tables');
-	dbms_session.set_identifier('airbrake_tables');
 
 end airbrake_tables;
 /

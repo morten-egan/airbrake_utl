@@ -9,7 +9,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('list_projects');
 
 		airbrake.session_setup(
 			airbrake_api_version => 'v4'
@@ -19,13 +18,11 @@ as
 
 		airbrake.talk;
 	
-		dbms_application_info.set_action(null);
 	
 		return airbrake.airbrake_response_result;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end list_projects;
@@ -39,7 +36,6 @@ as
 	
 	begin
 	
-		dbms_application_info.set_action('show_project');
 
 		airbrake.session_setup(
 			airbrake_api_version => 'v4'
@@ -49,21 +45,15 @@ as
 
 		airbrake.talk;
 	
-		dbms_application_info.set_action(null);
 	
 		return airbrake.airbrake_response_result;
 	
 		exception
 			when others then
-				dbms_application_info.set_action(null);
 				raise;
 	
 	end show_project;
 
-begin
-
-	dbms_application_info.set_client_info('airbrake_project');
-	dbms_session.set_identifier('airbrake_project');
 
 end airbrake_project;
 /
